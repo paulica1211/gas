@@ -168,12 +168,14 @@ function fetchAndWritePatentLaw() {
       content.forEach(item => {
         const itemType = item.getType();
         if (itemType === XmlService.ContentTypes.TEXT) {
-          text += item.getText();
+          // 空白を正規化（連続する空白・改行を単一スペースに）
+          const normalizedText = item.getText().replace(/\s+/g, ' ');
+          text += normalizedText;
         } else if (itemType === XmlService.ContentTypes.ELEMENT) {
           text += getTextRecursive(item.asElement());
         }
       });
-      return text;
+      return text.trim();
     }
 
     // 4. スプレッドシートにデータを書き込み
