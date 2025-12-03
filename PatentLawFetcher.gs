@@ -132,7 +132,7 @@ function fetchAndWritePatentLaw() {
 
       // Paragraph（項）を全て取得して本文を結合
       const paragraphs = article.getChildren('Paragraph', namespace);
-      paragraphs.forEach(paragraph => {
+      paragraphs.forEach((paragraph, index) => {
         const paragraphNum = paragraph.getChild('ParagraphNum', namespace);
         if (paragraphNum) {
           content += paragraphNum.getText() + ' ';
@@ -148,7 +148,7 @@ function fetchAndWritePatentLaw() {
         items.forEach(item => {
           const itemTitle = item.getChild('ItemTitle', namespace);
           if (itemTitle) {
-            content += '  ' + itemTitle.getText() + ' ';
+            content += '　' + itemTitle.getText() + ' ';
           }
 
           const itemSentence = item.getChild('ItemSentence', namespace);
@@ -156,6 +156,11 @@ function fetchAndWritePatentLaw() {
             content += getTextRecursive(itemSentence) + '\n';
           }
         });
+
+        // 項の間に空行を追加（最後の項以外）
+        if (index < paragraphs.length - 1) {
+          content += '\n';
+        }
       });
 
       return [title, content.trim()];
